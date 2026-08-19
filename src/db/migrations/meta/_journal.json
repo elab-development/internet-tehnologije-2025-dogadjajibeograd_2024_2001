@@ -15,6 +15,20 @@
       "when": 1786873868709,
       "tag": "0001_narrow_wild_pack",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1786891060340,
+      "tag": "0002_sudden_the_call",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1786958621243,
+      "tag": "0003_mean_zaran",
+      "breakpoints": true
     }
   ]
 }

@@ -11,8 +11,8 @@ if (!JWT_SECRET) {
 export type JwtUserClaims = {
     sub: string;
     email: string;
-    firstName?: string;
-    lastName?: string;
+    firstname?: string;
+    lastname?: string;
     dateOfBirth?: string;
     role: "user" | "admin";
 };
@@ -42,8 +42,8 @@ export function verifyAuthToken(token: string): JwtUserClaims {
     return {
         sub: payload.sub,
         email: payload.email,
-        firstName: payload.firstName,
-        lastName: payload.lastName,
+        firstname: payload.firstname,
+        lastname: payload.lastname,
         dateOfBirth: payload.dateOfBirth,
         role: payload.role,
     };

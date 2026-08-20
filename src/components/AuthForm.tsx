@@ -20,6 +20,13 @@ export default function AuthForm({ mode }: { mode: Mode }) {
     const [pwd, setPwd] = useState("");
     const [dateOfBirth, setDateOfBirth] = useState("");
 
+    const today = new Date();
+    const maxBirthDay = new Date(
+        today.getFullYear() - 13,
+        today.getMonth(),
+        today.getDate()
+    ).toISOString().split("T")[0];
+
     const btnLabel =
         mode === "login"
             ? "Prijavi se"
@@ -30,11 +37,73 @@ export default function AuthForm({ mode }: { mode: Mode }) {
             ? (["Niste registrovani?", "Registruj se", "/register"] as const)
             : (["Već imate nalog?", "Prijavi se", "/login"] as const);
 
+    const [fieldErrors, setFieldErrors] = useState({
+        firstname: "",
+        lastname: "",
+        email: "",
+        password: "",
+        dateOfBirth: "",
+    });
+
+    const validateRegister = () => {
+        const errors = {
+            firstname: "",
+            lastname: "",
+            email: "",
+            password: "",
+            dateOfBirth: "",
+        };
+
+        if (!firstname.trim()) {
+            errors.firstname = "Unesite ime.";
+        } else if (!/^[\p{L}\s]+$/u.test(firstname)) {
+            errors.firstname = "Ime može sadržati samo slova.";
+        }
+
+        if (!lastname.trim()) {
+            errors.lastname = "Unesite prezime.";
+        } else if (!/^[\p{L}\s]+$/u.test(lastname)) {
+            errors.lastname = "Prezime može sadržati samo slova.";
+        }
+
+        if (!email.trim()) {
+            errors.email = "Unesite email adresu.";
+        } else if (
+            !/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(email)
+        ) {
+            errors.email = "Unesite ispravnu email adresu.";
+        }
+
+        if (!pwd) {
+            errors.password = "Unesite lozinku.";
+        } else if (
+            !/(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}/.test(pwd)
+        ) {
+            errors.password =
+                "Lozinka mora imati najmanje 8 karaktera, veliko i malo slovo, broj i specijalni znak.";
+        }
+
+        if (!dateOfBirth) {
+            errors.dateOfBirth = "Unesite datum rođenja.";
+        } else if (dateOfBirth > maxBirthDay) {
+            errors.dateOfBirth = "Morate imati najmanje 13 godina.";
+        }
+
+        setFieldErrors(errors);
+
+        return !Object.values(errors).some(Boolean);
+    };
+
     {/* SUBMIT*/ }
     const handleSubmit = async (e: FormEvent) => {
         e.preventDefault();
         setError("");
         setLoading(true);
+
+        if (mode === "register" && !validateRegister()) {
+            setLoading(false);
+            return;
+        }
 
         try {
             const endpoint = mode === "login" ? "/api/auth/login" : "/api/auth/register"
@@ -56,7 +125,9 @@ export default function AuthForm({ mode }: { mode: Mode }) {
                     const data = await res.json();
                     message = data?.error ?? message;
                 } catch {
-                    
+                    setError(
+                        "Došlo je do greške. Pokušajte ponovo."
+                    );
                 }
 
                 setError(message);
@@ -92,7 +163,7 @@ export default function AuthForm({ mode }: { mode: Mode }) {
                 {/* Kartica */}
                 <div className="rounded-3xl border border-[#006D77]/10 bg-white p-6 shadow-[0_16px_45px_rgba(0,109,119,0.08)] sm:p-9">
 
-                    <form className="space-y-6" onSubmit={handleSubmit}>
+                    <form className="space-y-6" onSubmit={handleSubmit} noValidate>
 
                         {/* Ime i prezime */}
                         {mode === "register" && (
@@ -114,8 +185,18 @@ export default function AuthForm({ mode }: { mode: Mode }) {
                                             }
                                         }}
                                         placeholder="Unesite ime"
-                                        className="block w-full rounded-xl border border-[#006D77]/20 bg-[#F8FDFC] px-4 py-3 text-sm text-[#163536] outline-none transition duration-200 placeholder:text-[#8BA3A4] hover:border-[#006D77]/40 focus:border-[#2EC4B6] focus:bg-white focus:ring-4 focus:ring-[#2EC4B6]/10"
+                                        className={`block w-full rounded-xl border bg-[#F8FDFC] px-4 py-3 text-sm text-[#163536] outline-none transition duration-200 placeholder:text-[#8BA3A4]
+                                            ${fieldErrors.firstname
+                                                ? "border-red-400 focus:border-red-500 focus:ring-4 focus:ring-red-100"
+                                                : "border-[#006D77]/20 hover:border-[#006D77]/40 focus:border-[#2EC4B6] focus:bg-white focus:ring-4 focus:ring-[#2EC4B6]/10"
+                                            }
+                                        `}
                                     />
+                                    {fieldErrors.firstname && (
+                                        <p className="mt-2 text-xs font-medium text-red-600">
+                                            {fieldErrors.firstname}
+                                        </p>
+                                    )}
                                 </div>
 
                                 <div>
@@ -135,8 +216,18 @@ export default function AuthForm({ mode }: { mode: Mode }) {
                                             }
                                         }}
                                         placeholder="Unesite prezime"
-                                        className="block w-full rounded-xl border border-[#006D77]/20 bg-[#F8FDFC] px-4 py-3 text-sm text-[#163536] outline-none transition duration-200 placeholder:text-[#8BA3A4] hover:border-[#006D77]/40 focus:border-[#2EC4B6] focus:bg-white focus:ring-4 focus:ring-[#2EC4B6]/10"
+                                        className={`block w-full rounded-xl border bg-[#F8FDFC] px-4 py-3 text-sm text-[#163536] outline-none transition duration-200 placeholder:text-[#8BA3A4]
+                                            ${fieldErrors.lastname
+                                                ? "border-red-400 focus:border-red-500 focus:ring-4 focus:ring-red-100"
+                                                : "border-[#006D77]/20 hover:border-[#006D77]/40 focus:border-[#2EC4B6] focus:bg-white focus:ring-4 focus:ring-[#2EC4B6]/10"
+                                            }
+                                        `}
                                     />
+                                    {fieldErrors.lastname && (
+                                        <p className="mt-2 text-xs font-medium text-red-600">
+                                            {fieldErrors.lastname}
+                                        </p>
+                                    )}
                                 </div>
                             </div>
                         )}
@@ -174,8 +265,20 @@ export default function AuthForm({ mode }: { mode: Mode }) {
                                     pattern="[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}"
                                     title="Unesite ispravnu email adresu, na primer: ime@gmail.com"
                                     placeholder="ime@email.com"
-                                    className="block w-full rounded-xl border border-[#006D77]/20 bg-[#F8FDFC] py-3 pl-11 pr-4 text-sm text-[#163536] outline-none transition duration-200 placeholder:text-[#8BA3A4] hover:border-[#006D77]/40 focus:border-[#2EC4B6] focus:bg-white focus:ring-4 focus:ring-[#2EC4B6]/10"
+                                    className={`block w-full rounded-xl border bg-[#F8FDFC] py-3 pl-11 pr-4 text-sm text-[#163536] outline-none transition duration-200 placeholder:text-[#8BA3A4]
+                                        ${fieldErrors.email
+                                            ? "border-red-400 focus:border-red-500 focus:ring-4 focus:ring-red-100"
+                                            : "border-[#006D77]/20 hover:border-[#006D77]/40 focus:border-[#2EC4B6] focus:bg-white focus:ring-4 focus:ring-[#2EC4B6]/10"
+                                        }
+                                    `}
                                 />
+
+                                {fieldErrors.email && (
+                                    <p className="mt-2 text-xs font-medium text-red-600">
+                                        {fieldErrors.email}
+                                    </p>
+                                )}
+
                             </div>
                         </div>
 
@@ -220,8 +323,18 @@ export default function AuthForm({ mode }: { mode: Mode }) {
                                             : undefined
                                     }
                                     placeholder="Unesite lozinku"
-                                    className="block w-full rounded-xl border border-[#006D77]/20 bg-[#F8FDFC] py-3 pl-11 pr-4 text-sm text-[#163536] outline-none transition duration-200 placeholder:text-[#8BA3A4] hover:border-[#006D77]/40 focus:border-[#2EC4B6] focus:bg-white focus:ring-4 focus:ring-[#2EC4B6]/10"
-                                />
+                                    className={`block w-full rounded-xl border bg-[#F8FDFC] py-3 pl-11 pr-4 text-sm text-[#163536] outline-none transition duration-200 placeholder:text-[#8BA3A4]
+                                        ${fieldErrors.password
+                                            ? "border-red-400 focus:border-red-500 focus:ring-4 focus:ring-red-100"
+                                            : "border-[#006D77]/20 hover:border-[#006D77]/40 focus:border-[#2EC4B6] focus:bg-white focus:ring-4 focus:ring-[#2EC4B6]/10"
+                                        }
+                                    `} />
+
+                                {fieldErrors.password && (
+                                    <p className="mt-2 text-xs font-medium text-red-600">
+                                        {fieldErrors.password}
+                                    </p>
+                                )}
                             </div>
 
                             {mode === "register" && (
@@ -246,8 +359,22 @@ export default function AuthForm({ mode }: { mode: Mode }) {
                                     onChange={(e) =>
                                         setDateOfBirth(e.target.value)
                                     }
-                                    className="block w-full rounded-xl border border-[#006D77]/20 bg-[#F8FDFC] px-4 py-3 text-sm text-[#163536] outline-none transition duration-200 hover:border-[#006D77]/40 focus:border-[#2EC4B6] focus:bg-white focus:ring-4 focus:ring-[#2EC4B6]/10"
+                                    className={`block w-full rounded-xl border bg-[#F8FDFC] px-4 py-3 text-sm text-[#163536] outline-none transition duration-200
+                                        ${fieldErrors.dateOfBirth
+                                            ? "border-red-400 focus:border-red-500 focus:ring-4 focus:ring-red-100"
+                                            : "border-[#006D77]/20 hover:border-[#006D77]/40 focus:border-[#2EC4B6] focus:bg-white focus:ring-4 focus:ring-[#2EC4B6]/10"
+                                        }
+                                        `}
                                 />
+                                {fieldErrors.dateOfBirth ? (
+                                    <p className="mt-2 text-xs font-medium text-red-600">
+                                        {fieldErrors.dateOfBirth}
+                                    </p>
+                                ) : (
+                                    <p className="mt-2 text-xs text-[#718B8C]">
+                                        Morate imati najmanje 13 godina.
+                                    </p>
+                                )}
                             </div>
                         )}
 

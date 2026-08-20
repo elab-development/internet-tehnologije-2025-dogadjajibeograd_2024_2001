@@ -6,8 +6,8 @@ import { eq } from "drizzle-orm";
 import { NextResponse } from "next/server";
 
 type Body = {
-    firstName: string;
-    lastName: string;
+    firstname: string;
+    lastname: string;
     email: string;
     password: string;
     dateOfBirth: string;
@@ -15,14 +15,14 @@ type Body = {
 
 export async function POST(req: Request) {
     const {
-        firstName,
-        lastName,
+        firstname,
+        lastname,
         email,
         password,
         dateOfBirth,
     } = (await req.json()) as Body;
 
-    if (!email || !password || !firstName || !lastName || !dateOfBirth) {
+    if (!email || !password || !firstname || !lastname || !dateOfBirth) {
         return NextResponse.json(
             { error: "Sva polja su obavezna." },
             { status: 400 }
@@ -48,16 +48,16 @@ export async function POST(req: Request) {
     const [user] = await db
         .insert(users)
         .values({
-            firstName,
-            lastName,
+            firstname,
+            lastname,
             email,
             passHash,
             dateOfBirth,
         })
         .returning({
             id: users.id,
-            firstName: users.firstName,
-            lastName: users.lastName,
+            firstname: users.firstname,
+            lastname: users.lastname,
             email: users.email,
             dateOfBirth: users.dateOfBirth,
             role: users.role,
@@ -65,8 +65,8 @@ export async function POST(req: Request) {
 
     const token = signAuthToken({
         sub: user.id,
-        firstName: user.firstName,
-        lastName: user.lastName,
+        firstname: user.firstname,
+        lastname: user.lastname,
         email: user.email,
         dateOfBirth: user.dateOfBirth,
         role: user.role,
@@ -75,8 +75,8 @@ export async function POST(req: Request) {
     const res = NextResponse.json(
         {
             id: user.id,
-            firstName: user.firstName,
-            lastName: user.lastName,
+            firstname: user.firstname,
+            lastname: user.lastname,
             email: user.email,
             dateOfBirth: user.dateOfBirth,
             role: user.role,

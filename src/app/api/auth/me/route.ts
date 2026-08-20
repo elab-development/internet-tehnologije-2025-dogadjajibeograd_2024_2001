@@ -20,8 +20,8 @@ export async function GET() {
         const [user] = await db.select({
             id: users.id,
             email: users.email,
-            firstName: users.firstName,
-            lastName: users.lastName,
+            firstname: users.firstname,
+            lastname: users.lastname,
             dateOfBirth: users.dateOfBirth,
             role: users.role,
             createdAt: users.createdAt

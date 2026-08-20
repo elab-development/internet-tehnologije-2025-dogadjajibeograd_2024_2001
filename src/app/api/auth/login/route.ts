@@ -47,8 +47,8 @@ export async function POST(req: Request) {
     const token = signAuthToken({
         sub: user.id,
         email: user.email,
-        firstName: user.firstName,
-        lastName: user.lastName,
+        firstname: user.firstname,
+        lastname: user.lastname,
         dateOfBirth: user.dateOfBirth,
         role: user.role,
     });
@@ -56,8 +56,8 @@ export async function POST(req: Request) {
     const res = NextResponse.json({
         id: user.id,
         email: user.email,
-        firstName: user.firstName,
-        lastName: user.lastName,
+        firstname: user.firstname,
+        lastname: user.lastname,
         dateOfBirth: user.dateOfBirth,
         role: user.role,
     });

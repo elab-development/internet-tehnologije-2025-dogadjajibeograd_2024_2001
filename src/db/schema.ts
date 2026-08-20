@@ -27,11 +27,11 @@ export const locationTypeEnum = pgEnum("location_type", [
 export const users = pgTable("users", {
     id: uuid("id").primaryKey().defaultRandom(),
 
-    firstName: varchar("first_name", {
+    firstname: varchar("first_name", {
         length: 30,
     }).notNull(),
 
-    lastName: varchar("last_name", {
+    lastname: varchar("last_name", {
         length: 30,
     }).notNull(),
 

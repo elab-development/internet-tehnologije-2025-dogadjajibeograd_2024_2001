@@ -21,24 +21,24 @@ const seed = async () => {
             .insert(users)
             .values([
                 {
-                    firstName: "Petar",
-                    lastName: "Petrović",
+                    firstname: "Petar",
+                    lastname: "Petrović",
                     email: "petar.petrovic@gmail.com",
                     passHash: password1,
                     dateOfBirth: "1998-05-14",
                     role: "user",
                 },
                 {
-                    firstName: "Jovana",
-                    lastName: "Jovanović",
+                    firstname: "Jovana",
+                    lastname: "Jovanović",
                     email: "jovana.jovanovic@gmail.com",
                     passHash: password2,
                     dateOfBirth: "2000-09-22",
                     role: "user",
                 },
                 {
-                    firstName: "Marko",
-                    lastName: "Marković",
+                    firstname: "Marko",
+                    lastname: "Marković",
                     email: "admin@belgradeevents.rs",
                     passHash: adminPassword,
                     dateOfBirth: "1995-03-10",
@@ -84,7 +84,7 @@ const seed = async () => {
                     name: "Drugo",
                 },
             ])
-            .returning();
+            .onConflictDoNothing().returning();
 
         console.log("Event types seeded successfully.");
 
@@ -133,15 +133,9 @@ const seed = async () => {
                     latitude: 44.8154,
                     longitude: 20.4598,
                 },
-                {
-                    name: "Cineplexx Galerija",
-                    type: "bioskop",
-                    address: "Bulevar Vudroa Vilsona 12, Beograd",
-                    latitude: 44.8016,
-                    longitude: 20.4387,
-                },
+                
             ])
-            .returning();
+            .onConflictDoNothing().returning();
 
         console.log("Event locations seeded successfully.");
 
@@ -202,10 +196,6 @@ const seed = async () => {
             (location) => location.name === "Kulturni centar Beograda",
         );
 
-        const cineplexx = insertedLocations.find(
-            (location) => location.name === "Cineplexx Galerija",
-        );
-
         if (
             !predstavaType ||
             !operaType ||
@@ -220,8 +210,7 @@ const seed = async () => {
             !jdp ||
             !savaCentar ||
             !domOmladine ||
-            !kulturniCentar ||
-            !cineplexx
+            !kulturniCentar 
         ) {
             throw new Error("Missing required seed data.");
         }
@@ -293,15 +282,6 @@ const seed = async () => {
                     locationId: domOmladine.id,
                 },
                 {
-                    name: "Veče evropskog filma",
-                    description:
-                        "Projekcija odabranog evropskog filma uz razgovor nakon projekcije.",
-                    eventDate: "2026-10-12",
-                    eventTime: "20:30",
-                    eventTypeId: filmType.id,
-                    locationId: cineplexx.id,
-                },
-                {
                     name: "Savremena umetnost Beograda",
                     description:
                         "Izložba radova savremenih umetnika iz Srbije.",
@@ -320,7 +300,7 @@ const seed = async () => {
                     locationId: atelje212.id,
                 },
             ])
-            .returning();
+            .onConflictDoNothing().returning();
 
         console.log("Events seeded successfully.");
 

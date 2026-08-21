@@ -29,6 +29,13 @@
       "when": 1786958621243,
       "tag": "0003_mean_zaran",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1787301094195,
+      "tag": "0004_add-location-image",
+      "breakpoints": true
     }
   ]
 }

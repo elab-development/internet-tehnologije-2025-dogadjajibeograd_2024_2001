@@ -72,6 +72,10 @@ export const eventLocations = pgTable("event_locations", {
 
     longitude: doublePrecision("longitude").notNull(),
 
+    imageUrl: varchar("image_url", {
+        length: 500,
+    }),
+
     createdAt: timestamp("created_at").defaultNow().notNull(),
 
 });

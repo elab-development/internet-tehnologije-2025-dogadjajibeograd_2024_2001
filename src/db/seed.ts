@@ -95,22 +95,22 @@ const seed = async () => {
                     name: "Narodno pozorište",
                     type: "pozoriste",
                     address: "Francuska 3, Beograd",
-                    latitude: 44.8163,
-                    longitude: 20.4607,
+                    latitude: 44.8167,
+                    longitude: 20.4606,
                 },
                 {
                     name: "Atelje 212",
                     type: "pozoriste",
                     address: "Svetogorska 21, Beograd",
-                    latitude: 44.8138,
-                    longitude: 20.4699,
+                    latitude: 44.814167,
+                    longitude: 20.468056,
                 },
                 {
                     name: "Jugoslovensko dramsko pozorište",
                     type: "pozoriste",
                     address: "Kralja Milana 50, Beograd",
-                    latitude: 44.8054,
-                    longitude: 20.4633,
+                    latitude: 44.805600,
+                    longitude: 20.464789,
                 },
                 {
                     name: "Sava Centar",
@@ -123,8 +123,8 @@ const seed = async () => {
                     name: "Dom omladine Beograda",
                     type: "centar_za_kulturu",
                     address: "Makedonska 22, Beograd",
-                    latitude: 44.8152,
-                    longitude: 20.4634,
+                    latitude: 44.815411,
+                    longitude: 20.462895,
                 },
                 {
                     name: "Kulturni centar Beograda",
@@ -132,6 +132,13 @@ const seed = async () => {
                     address: "Knez Mihailova 6, Beograd",
                     latitude: 44.8154,
                     longitude: 20.4598,
+                },
+                {
+                    name: "Cineplexx Galerija",
+                    type: "bioskop",
+                    address: "Bulevar Vudroa Vilsona 12, Beograd",
+                    latitude: 44.8025396,
+                    longitude: 20.4469703,
                 },
                 
             ])

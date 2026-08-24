@@ -145,7 +145,7 @@ export default function AuthForm({ mode }: { mode: Mode }) {
         <main className="min-h-[calc(100vh-80px)] bg-[#EDFAF9] px-4 py-14 sm:px-6 lg:px-8">
             <div className="mx-auto max-w-xl">
 
-                {/* Naslov stranice */}
+                {/* Home page*/}
                 <div className="mb-8 text-center">
                     <h1 className="text-3xl font-bold tracking-tight text-[#163536]">
                         {mode === "login"
@@ -160,12 +160,12 @@ export default function AuthForm({ mode }: { mode: Mode }) {
                     </p>
                 </div>
 
-                {/* Kartica */}
+                {/* Card */}
                 <div className="rounded-3xl border border-[#006D77]/10 bg-white p-6 shadow-[0_16px_45px_rgba(0,109,119,0.08)] sm:p-9">
 
                     <form className="space-y-6" onSubmit={handleSubmit} noValidate>
 
-                        {/* Ime i prezime */}
+                        {/* First and last name */}
                         {mode === "register" && (
                             <div className="grid gap-5 sm:grid-cols-2">
                                 <div>
@@ -282,7 +282,7 @@ export default function AuthForm({ mode }: { mode: Mode }) {
                             </div>
                         </div>
 
-                        {/* Lozinka */}
+                        {/* Passsword */}
                         <div>
                             <label className="mb-2 block text-sm font-semibold text-[#294C4E]">
                                 Lozinka
@@ -345,7 +345,7 @@ export default function AuthForm({ mode }: { mode: Mode }) {
                             )}
                         </div>
 
-                        {/* Datum rođenja */}
+                        {/* Date of birth */}
                         {mode === "register" && (
                             <div>
                                 <label className="mb-2 block text-sm font-semibold text-[#294C4E]">
@@ -378,7 +378,7 @@ export default function AuthForm({ mode }: { mode: Mode }) {
                             </div>
                         )}
 
-                        {/* Greška */}
+                        {/* Error */}
                         {error && (
                             <div className="rounded-xl border border-red-200 bg-red-50 px-4 py-3">
                                 <p className="text-sm font-medium text-red-700">
@@ -387,7 +387,7 @@ export default function AuthForm({ mode }: { mode: Mode }) {
                             </div>
                         )}
 
-                        {/* Dugme */}
+                        {/* Button */}
                         <button
                             type="submit"
                             disabled={loading}

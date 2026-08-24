@@ -1,33 +1,18 @@
 "use client";
 
 import { useAuth } from "./AuthProvider";
-import { usePathname } from "next/navigation";
 import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
+import NavigationMenu from "./NavigationMenu";
+import UserMenu from "./UserMenu";
+import Weather from "./Weather";
 
-export default function headerBar() {
-    const { status, user, logout } = useAuth();
-    const [userMenuOpen, setUserMenuOpen] = useState(false);
-    const userMenuRef = useRef<HTMLDivElement>(null);
+export default function HeaderBar() {
+    const { status } = useAuth();
 
-    useEffect(() => {
-        const handleClickOutside = (event: MouseEvent) => {
-            if (
-                userMenuRef.current &&
-                !userMenuRef.current.contains(event.target as Node)
-            ) {
-                setUserMenuOpen(false);
-            }
-        };
+    const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-        document.addEventListener("mousedown", handleClickOutside);
-
-        return () => {
-            document.removeEventListener("mousedown", handleClickOutside);
-        };
-    }, []);
-    const isLogin = status === "user" || status === "admin";
-    const pathname = usePathname();
+    const isAdmin = status === "admin";
 
     const scrollTop = () => {
         window.scrollTo({
@@ -36,256 +21,148 @@ export default function headerBar() {
         });
     };
 
-    const navClass = (path: string) =>
-        pathname === path
-            ? "rounded-xl bg-[#E0F2FE] px-4 py-2 text-sm font-semibold text-[#0369A1]"
-            : "rounded-xl px-4 py-2 text-sm font-medium text-[#52677D] transition duration-200 hover:bg-[#E0F2FE] hover:text-[#0284C7]";
-
     return (
-        <header
-            className="
-                sticky
-                top-0
-                z-50
-                border-b
-                border-[#BAE6FD]
-                bg-white/95
-                shadow-sm
-                backdrop-blur-md
-            "
-        >
-            <div className="mx-auto flex h-20 max-w-7xl items-center justify-between px-6">
+        <header className="sticky top-0 z-50 border-b border-[#BAE6FD] bg-white/95 shadow-sm backdrop-blur-md">
+
+            {/* Main header */}
+            <div className="mx-auto flex min-h-24 max-w-[1500px] items-center gap-8 px-6 lg:px-8">
 
                 {/* LOGO */}
                 <Link
                     href="/"
                     onClick={scrollTop}
-                    className="group flex items-center gap-3"
+                    className="group flex shrink-0 items-center gap-3"
                 >
                     <div
                         className="
-                            flex
-                            h-11
-                            w-11
-                            items-center
-                            justify-center
-                            rounded-xl
-                            border
-                            border-[#BAE6FD]
-                            bg-[#F0F9FF]
-                            shadow-sm
-                            transition
-                            duration-300
-                            group-hover:border-[#38BDF8]
-                            group-hover:bg-[#E0F2FE]
-                        "
+        h-12 w-12 shrink-0
+        overflow-hidden
+        rounded-2xl
+        border border-[#BAE6FD]
+        bg-[#F0F9FF]
+        shadow-sm
+        transition duration-300
+        group-hover:border-[#38BDF8]
+        group-hover:shadow-md
+    "
                     >
-                        <svg
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            className="
-                                h-6
-                                w-6
-                                text-[#0284C7]
-                                transition
-                                duration-300
-                                group-hover:text-[#0369A1]
-                            "
-                        >
-                            <path
-                                d="M5 5.5C5 4.67 5.67 4 6.5 4H11v15H6.5A1.5 1.5 0 0 0 5 20.5v-15Z"
-                                stroke="currentColor"
-                                strokeWidth="1.7"
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                            />
-
-                            <path
-                                d="M19 5.5C19 4.67 18.33 4 17.5 4H13v15h4.5a1.5 1.5 0 0 1 1.5 1.5v-15Z"
-                                stroke="currentColor"
-                                strokeWidth="1.7"
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                            />
-                        </svg>
+                        <img
+                            src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQglR4LiYmmH6Y4Rg8jSp5zBw-BBErMwczfO5fegL3yow&s=10"
+                            alt="Moj Beograd"
+                            className="h-full w-full object-cover"
+                        />
                     </div>
-
-                    <div>
-                        <h1 className="text-xl font-bold tracking-tight text-[#0F2942]">
-                            Pregled kultrurnih događaja<br></br>
-                            <span className="ml-1 text-[#0284C7]">
-                                Moj Beograd
+                    <div className="leading-tight">
+                        <h1 className="whitespace-nowrap text-xl font-bold tracking-tight text-[#0F2942]">
+                            Moj{" "}
+                            <span className="text-[#0284C7]">
+                                Beograd
                             </span>
                         </h1>
 
-                        <p className="mt-0.5 hidden text-xs font-medium tracking-wide text-[#64748B] sm:block">
-                            Književnost · Pozorište · Muzika · Umetnost
+                        <p className="mt-1 whitespace-nowrap text-xs font-medium text-[#64748B]">
+                            Pregled događaja u Beogradu
                         </p>
                     </div>
                 </Link>
 
-                {/* NAVIGATION */}
-                <nav className="hidden items-center gap-1 md:flex">
+                {/* DESKTOP MENU */}
+                <div className="ml-auto hidden items-center gap-4 lg:flex">
 
-                    <Link
-                        href="/news"
-                        onClick={scrollTop}
-                        className={navClass("/news")}
-                    >
-                        Vesti
-                    </Link>
+                    <NavigationMenu isAdmin={isAdmin} />
 
-                    <Link
-                        href="/venues"
-                        onClick={scrollTop}
-                        className={navClass("/venues")}
-                    >
-                        Mesta događanja
-                    </Link>
-
-                    <Link
-                        href="/new"
-                        onClick={scrollTop}
-                        className={navClass("/new")}
-                    >
-                        Dodaj događaj
-                    </Link>
-
-                </nav>
-                {isLogin ? (
-                    <div
-                        ref={userMenuRef}
-                        className="relative inline-block"
-                    >
-                        <button
-                            type="button"
-                            onClick={() => setUserMenuOpen((prev) => !prev)}
-                            className={`flex
-                                items-center
-                                justify-center
-                                px-4
-                                py-2.5
-                                text-sm
-                                font-semibold
-                                text-[#52677D]
-                                transition
-                                duration-200
-                                hover:bg-[#E0F2FE]
-                                hover:text-[#0284C7]
-                                ${userMenuOpen
-                                    ? "rounded-t-xl bg-[#F0F9FF] text-[#0284C7]"
-                                    : "rounded-xl bg-transparent"
-                                }
-`}
-                        >
-                            {user.firstname} {user.lastname}
-                        </button>
-
-                        {userMenuOpen && (
-                            <div
-                                className=" absolute
-                                left-0
-                                top-full
-                                z-[100]
-                                min-w-full
-                                w-max
-                                overflow-hidden
-                                rounded-b-xl
-                                border
-                                border-t-0
-                                border-[#BAE6FD]
-                                bg-white/95
-                                shadow-lg
-                                backdrop-blur-md"
-                            >
-                                <Link
-                                    href="/profile"
-                                    onClick={() => setUserMenuOpen(false)}
-                                    className=" block
-                                    whitespace-nowrap
-                                    px-5
-                                    py-3
-                                    text-sm
-                                    font-medium
-                                    text-[#52677D]
-                                    transition
-                                    duration-200
-                                    hover:bg-[#E0F2FE]
-                                    hover:text-[#0284C7]
-                                    "
-                                >
-                                    Moj profil
-                                </Link>
-
-                                <Link
-                                    href="/favorites"
-                                    onClick={() => setUserMenuOpen(false)}
-                                    className=" block
-                                    whitespace-nowrap
-                                    px-5
-                                    py-3
-                                    text-sm
-                                    font-medium
-                                    text-[#52677D]
-                                    transition
-                                    duration-200
-                                    hover:bg-[#E0F2FE]
-                                    hover:text-[#0284C7]
-                                    "
-                                >
-                                    Omiljeni događaji
-                                </Link>
-
-                                <div className="border-t border-[#BAE6FD]" />
-
-                                <button
-                                    type="button"
-                                    onClick={async () => {
-                                        setUserMenuOpen(false);
-                                        await logout();
-                                    }}
-                                    className=" block
-                                    w-full
-                                    whitespace-nowrap
-                                    px-5
-                                    py-3
-                                    text-left
-                                    text-sm
-                                    font-medium
-                                    text-[#52677D]
-                                    transition
-                                    duration-200
-                                    hover:bg-[#E0F2FE]
-                                    hover:text-[#0284C7]"
-                                >
-                                    Izloguj se
-                                </button>
-                            </div>
-                        )}
+                    <div className="hidden shrink-0 xl:block">
+                        <Weather />
                     </div>
-                ) : (
-                    <Link
-                        href="/login"
-                        className=" flex
+
+                    <UserMenu />
+
+                </div>
+
+                {/* HAMBURGER */}
+                <button
+                    type="button"
+                    onClick={() =>
+                        setMobileMenuOpen((prev) => !prev)
+                    }
+                    className="
+                        ml-auto
+                        flex
+                        h-11
+                        w-11
                         items-center
                         justify-center
                         rounded-xl
-                        bg-transparent
-                        px-4
-                        py-2.5
-                        text-sm
-                        font-semibold
                         text-[#52677D]
                         transition
-                        duration-200
                         hover:bg-[#E0F2FE]
-                        hover:text-[#0284C7]"
-                    >
-                        Uloguj se
-                    </Link>
-                )}
+                        hover:text-[#0284C7]
+                        lg:hidden
+                    "
+                    aria-label="Meni"
+                >
+                    {mobileMenuOpen ? (
+                        <svg
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            className="h-6 w-6"
+                        >
+                            <path
+                                d="M6 6L18 18M18 6L6 18"
+                                stroke="currentColor"
+                                strokeWidth="2"
+                                strokeLinecap="round"
+                            />
+                        </svg>
+                    ) : (
+                        <svg
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            className="h-6 w-6"
+                        >
+                            <path
+                                d="M4 7H20M4 12H20M4 17H20"
+                                stroke="currentColor"
+                                strokeWidth="2"
+                                strokeLinecap="round"
+                            />
+                        </svg>
+                    )}
+                </button>
 
             </div>
+
+            {/* MOBILE MENU */}
+            {mobileMenuOpen && (
+                <div
+                    className="
+                        border-t
+                        border-[#BAE6FD]
+                        bg-white
+                        px-6
+                        py-4
+                        lg:hidden
+                    "
+                >
+                    <div className="mx-auto max-w-[1500px]">
+
+                        <NavigationMenu
+                            isAdmin={isAdmin}
+                            mobile
+                            onNavigate={() =>
+                                setMobileMenuOpen(false)
+                            }
+                        />
+                        <Weather />
+
+                        <div className="my-3 border-t border-[#BAE6FD]" />
+
+                        <UserMenu />
+
+                    </div>
+                </div>
+            )}
+
         </header>
     );
 }

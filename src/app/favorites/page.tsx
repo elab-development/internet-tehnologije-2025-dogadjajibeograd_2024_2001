@@ -1,5 +1,5 @@
-export default function UpcomingHomepage(){
-    return(
-        <p>Strana u izradi</p>
-    );
+import FavoritesForm from "@/components/FavoritesForm";
+
+export default function FavoritesPage() {
+    return <FavoritesForm />;
 }

@@ -52,6 +52,4 @@ export interface FullEventDto {
 export interface FullFavoriteEventDto {
     userId: string;
     eventId: string;
-
-    event: FullEventDto;
 }

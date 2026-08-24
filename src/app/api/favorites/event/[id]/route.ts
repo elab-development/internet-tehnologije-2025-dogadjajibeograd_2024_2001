@@ -4,6 +4,10 @@ import { AUTH_COOKIE, verifyAuthToken } from "@/lib/auth";
 import { and, eq } from "drizzle-orm";
 import { NextRequest, NextResponse } from "next/server";
 
+export interface FavoritesDTO{
+    userId: string;
+    eventId: string;
+}
 export async function GET(
     request: NextRequest,
     { params }: { params: Promise<{ id: string }> }

@@ -122,57 +122,6 @@ export const GET = async (
     }
 };
 
-export const POST = async (
-    request: Request,
-    { params }: RouteParams
-) => {
-    try {
-        const { id } = await params;
-        const body = await request.json();
-
-        const {
-            name,
-            description,
-            eventDate,
-            eventTime,
-            eventTypeId,
-            locationId,
-        } = body;
-
-        const [updatedEvent] = await db
-            .update(events)
-            .set({
-                name,
-                description,
-                eventDate,
-                eventTime,
-                eventTypeId,
-                locationId,
-            })
-            .where(eq(events.id, id))
-            .returning();
-
-        if (!updatedEvent) {
-            return NextResponse.json(
-                { error: "Događaj nije pronađen." },
-                { status: 404 }
-            );
-        }
-
-        return NextResponse.json({
-            message: "Događaj je uspešno izmenjen.",
-            event: updatedEvent,
-        });
-    } catch (error) {
-        console.error("POST /api/events/[id] error:", error);
-
-        return NextResponse.json(
-            { error: "Greška pri izmeni događaja." },
-            { status: 500 }
-        );
-    }
-};
-
 export const DELETE = async (
     request: Request,
     { params }: RouteParams

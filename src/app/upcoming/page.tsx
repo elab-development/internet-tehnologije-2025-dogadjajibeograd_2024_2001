@@ -1,5 +1,6 @@
+import UpcomingEventsForm from "@/components/UpcomingEventsForm";
 export default function UpcomingHomepage(){
     return(
-        <p>Strana u izradi</p>
+        <UpcomingEventsForm/>
     );
 }

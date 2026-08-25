@@ -132,3 +132,29 @@ export const favoriteEvents = pgTable(
         }),
     ],
 );
+
+export const upcomingEvents = pgTable("upcoming_events", {
+    id: uuid("id").defaultRandom().primaryKey(),
+
+    name: varchar("name", { length: 200 }).notNull(),
+
+    locationName: varchar("location_name", { length: 150 }).notNull(),
+
+    address: varchar("address", { length: 200 }).notNull(),
+
+    eventDate: date("event_date").notNull(),
+
+    description: text("description"),
+
+    source: varchar("source", { length: 100 }).notNull(),
+
+    sourceUrl: varchar("source_url", { length: 500 }).notNull(),
+
+    externalId: varchar("external_id", { length: 255 })
+        .notNull()
+        .unique(),
+
+    scrapedAt: timestamp("scraped_at")
+        .defaultNow()
+        .notNull(),
+});

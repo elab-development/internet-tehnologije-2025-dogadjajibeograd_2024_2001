@@ -53,3 +53,10 @@ export interface FullFavoriteEventDto {
     userId: string;
     eventId: string;
 }
+
+export interface UpcomingEventDto {
+    id: string;
+    name: string;
+    eventDate: string;
+    locationName: string;
+}

@@ -20,7 +20,6 @@ export const GET = async (request: NextRequest) => {
         const data = await db
             .select({
                 eventId: favoriteEvents.eventId,
-                eventName: events.name,
             })
             .from(favoriteEvents)
             .where(eq(favoriteEvents.userId, user.sub));

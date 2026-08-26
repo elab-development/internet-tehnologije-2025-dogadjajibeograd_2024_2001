@@ -20,21 +20,6 @@ export default function UpcomingEventsForm() {
                 setLoading(true);
                 setError("");
 
-                await Promise.all([
-                    fetch("/api/scrape/savaCentar", {
-                        method: "POST",
-                        cache: "no-store",
-                    }),
-                    fetch("/api/scrape/mtsDvorana", {
-                        method: "POST",
-                        cache: "no-store",
-                    }),
-                    fetch("/api/scrape/domOmladine", {
-                        method: "POST",
-                        cache: "no-store",
-                    }),
-                ]);
-
                 const response = await fetch("/api/upcomingEvents", {
                     cache: "no-store",
                 });

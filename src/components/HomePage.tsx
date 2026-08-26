@@ -69,6 +69,22 @@ export default function HomePage({
                 const data = await res.json();
 
                 setEventTypes(data);
+
+                await Promise.all([
+                    fetch("/api/scrape/savaCentar", {
+                        method: "POST",
+                        cache: "no-store",
+                    }),
+                    fetch("/api/scrape/mtsDvorana", {
+                        method: "POST",
+                        cache: "no-store",
+                    }),
+                    fetch("/api/scrape/domOmladine", {
+                        method: "POST",
+                        cache: "no-store",
+                    }),
+                ]);
+
             } catch (error) {
                 console.error(
                     "Event types error:",
@@ -169,7 +185,7 @@ export default function HomePage({
                     {/* Sidebar */}
                     <div className="min-w-0 flex-1">
 
-                        {/* HEADER */}
+                        {/* Header */}
                         <section className="mb-10 text-center">
                             <div className="mx-auto " />
 

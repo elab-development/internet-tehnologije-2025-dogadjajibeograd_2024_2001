@@ -68,16 +68,6 @@ const convertDate = (
     const normalized =
         text.toLocaleLowerCase("sr");
 
-    /*
-        Primer:
-
-        Utorak, 8. septembar 2026. u 19.00
-
-        ili:
-
-        Od 11. do 28. avgusta 2026.
-    */
-
     const fullDateMatch =
         normalized.match(
             /(\d{1,2})\.\s*([a-zčćžšđ]+)\s+(\d{4})/
@@ -100,15 +90,6 @@ const convertDate = (
         )}`;
     }
 
-    /*
-        Poseban slučaj:
-
-        Od 11. do 28. avgusta 2026.
-
-        Hoćemo početni datum:
-        11.08.2026.
-    */
-
     const rangeMatch =
         normalized.match(
             /od\s+(\d{1,2})\.\s+do\s+\d{1,2}\.\s+([a-zčćžšđ]+)\s+(\d{4})/
@@ -130,14 +111,6 @@ const convertDate = (
             "0"
         )}`;
     }
-
-    /*
-        Primer:
-
-        Od 27. maja do 31. avgusta 2026.
-
-        Ovde početni mesec nije isti kao krajnji.
-    */
 
     const longRangeMatch =
         normalized.match(
@@ -183,15 +156,6 @@ const getLocation = (
     const normalized =
         normalizeText(eventInfo);
 
-    /*
-        Na sajtu se pojavljuju lokacije kao:
-
-        DOB//Amerikana
-        DOB//Galerija
-        DOB//Klub
-        DOB//Velika sala
-    */
-
     const locationMatch =
         normalized.match(
             /DOB\/\/[^–—,\n]+/i
@@ -218,11 +182,6 @@ const getDescription = (
             const tag =
                 element.tagName?.toLowerCase();
 
-            /*
-                Ne idemo do navigacije
-                "prethodni / sledeći".
-            */
-
             const text = normalizeText(
                 $(element).text()
             );
@@ -242,11 +201,6 @@ const getDescription = (
     if (paragraphs.length === 0) {
         return null;
     }
-
-    /*
-        Prvi pasus je često glavni opis.
-        Nećemo čuvati celu ogromnu stranicu.
-    */
 
     return paragraphs
         .slice(0, 3)
@@ -291,11 +245,6 @@ const scrapeEventDetails = async (
         return null;
     }
 
-    /*
-        Informacija odmah nakon naslova
-        sadrži datum/vreme/lokaciju.
-    */
-
     const heading =
         $("h1").first();
 
@@ -328,11 +277,6 @@ const scrapeEventDetails = async (
         current =
             current.next();
     }
-
-    /*
-        Rezervna opcija ako je datum
-        smešten u drugom elementu.
-    */
 
     if (!eventInfo) {
         const bodyText =
@@ -423,18 +367,6 @@ export const scrapeDomOmladineEvents =
         const eventUrls =
             new Set<string>();
 
-        /*
-            Događaji Doma omladine imaju različite
-            kategorije, npr:
-
-            /koncerti/...
-            /filmovi/...
-            /debate/...
-            /izlozbe/...
-            /pozoriste/...
-            /radionice/...
-        */
-
         const allowedPaths = [
             "/koncerti/",
             "/filmovi/",
@@ -466,10 +398,6 @@ export const scrapeDomOmladineEvents =
                 } catch {
                     return;
                 }
-
-                /*
-                    Samo Dom omladine.
-                */
 
                 if (
                     url.hostname !==

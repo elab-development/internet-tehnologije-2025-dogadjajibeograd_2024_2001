@@ -1,0 +1,71 @@
+services:
+
+  postgres:
+    image: postgres:17
+    container_name: belgrade-events-postgres
+
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: belgrade_events
+
+    ports:
+      - "5432:5432"
+
+    volumes:
+      - belgrade_events_pgdata:/var/lib/postgresql/data
+
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "pg_isready -U postgres -d belgrade_events"
+        ]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+    networks:
+      - belgrade-events-network
+
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+
+    container_name: belgrade-events-app
+
+    ports:
+      - "3000:3000"
+
+    environment:
+      DATABASE_URL: postgres://postgres:postgres@postgres:5432/belgrade_events
+
+      JWT_SECRET: ${JWT_SECRET}
+      JWT_EXPIRES: ${JWT_EXPIRES}
+
+      OPENWEATHER_API_KEY: ${OPENWEATHER_API_KEY}
+
+      NEXT_PUBLIC_GOOGLE_MAPS_API_KEY: ${NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}
+
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+    volumes:
+      - .:/app
+      - /app/node_modules
+      - /app/.next
+
+    networks:
+      - belgrade-events-network
+
+
+volumes:
+  belgrade_events_pgdata:
+    external: true
+
+networks:
+  belgrade-events-network:
+    driver: bridge

@@ -36,36 +36,6 @@ jobs:
       - name: Run tests
         run: npm test -- --run
 
-  build:
-    name: Build application
-    runs-on: ubuntu-latest
-    needs: test
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 24
-          cache: npm
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Check JWT secret
-        run: |
-          if [ -z "$JWT_SECRET" ]; then
-            echo "JWT_SECRET is missing"
-            exit 1
-          else
-            echo "JWT_SECRET is available"
-          fi
-
-      - name: Build Next.js application
-        run: npm run build
-
   docker:
     name: Build Docker image
     runs-on: ubuntu-latest

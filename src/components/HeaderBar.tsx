@@ -35,16 +35,16 @@ export default function HeaderBar() {
                 >
                     <div
                         className="
-        h-12 w-12 shrink-0
-        overflow-hidden
-        rounded-2xl
-        border border-[#BAE6FD]
-        bg-[#F0F9FF]
-        shadow-sm
-        transition duration-300
-        group-hover:border-[#38BDF8]
-        group-hover:shadow-md
-    "
+                            h-12 w-12 shrink-0
+                            overflow-hidden
+                            rounded-2xl
+                            border border-[#BAE6FD]
+                            bg-[#F0F9FF]
+                            shadow-sm
+                            transition duration-300
+                            group-hover:border-[#38BDF8]
+                            group-hover:shadow-md
+                        "
                     >
                         <img
                             src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQglR4LiYmmH6Y4Rg8jSp5zBw-BBErMwczfO5fegL3yow&s=10"

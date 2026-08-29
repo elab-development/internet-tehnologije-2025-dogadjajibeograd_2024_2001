@@ -13,7 +13,6 @@ export default function UpcomingEventsForm() {
     const [dateFrom, setDateFrom] = useState("");
     const [dateTo, setDateTo] = useState("");
 
-
     useEffect(() => {
         const loadEvents = async () => {
             try {

@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { FullEventDto } from "@/shared/types";
+import { useAuth } from "./AuthProvider";
 
 interface FavoriteEventDto {
     eventId: string;
@@ -13,13 +14,28 @@ export default function FavoritesPage() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
 
+    const { status } = useAuth();
+
+    const isLogin = status === "admin" || status === "user";
+
     useEffect(() => {
+        if (status === "loading") {
+            return;
+        }
+
+        if (!isLogin) {
+            setLoading(false);
+            return;
+        }
+
         const loadFavorites = async () => {
             try {
                 setLoading(true);
                 setError("");
 
                 const response = await fetch("/api/favorites/user", {
+                    method: "GET",
+                    credentials: "include",
                     cache: "no-store",
                 });
 
@@ -28,7 +44,7 @@ export default function FavoritesPage() {
                 if (!response.ok) {
                     throw new Error(
                         result?.message ||
-                        "Greška pri učitavanju omiljenih događaja."
+                            "Greška pri učitavanju omiljenih događaja."
                     );
                 }
 
@@ -48,7 +64,7 @@ export default function FavoritesPage() {
                         if (!eventResponse.ok) {
                             throw new Error(
                                 eventData?.message ||
-                                "Greška pri učitavanju događaja."
+                                    "Greška pri učitavanju događaja."
                             );
                         }
 
@@ -71,7 +87,34 @@ export default function FavoritesPage() {
         };
 
         loadFavorites();
-    }, []);
+    }, [status, isLogin]);
+
+    if (!isLogin) {
+        return (
+            <main className="min-h-[calc(100vh-80px)] bg-[#EDFAF9] px-4 py-14 sm:px-6 lg:px-8">
+                <div className="mx-auto max-w-2xl">
+                    <div className="rounded-3xl border border-[#006D77]/10 bg-white p-8 text-center shadow-[0_16px_45px_rgba(0,109,119,0.08)]">
+                        <h1 className="text-2xl font-bold text-[#163536]">
+                            Niste prijavljeni
+                        </h1>
+
+                        <p className="mt-3 text-sm text-[#607D7E]">
+                            Morate biti prijavljeni da biste pristupili svojim
+                            omiljenim događajima.
+                        </p>
+
+                        <Link
+                            href="/login"
+                            className="mt-6 inline-flex items-center justify-center rounded-xl bg-[#006D77] px-6 py-3 text-sm font-semibold text-white transition hover:bg-[#005A63]"
+                        >
+                            Prijavi se
+                        </Link>
+                    </div>
+                </div>
+            </main>
+        );
+    }
+
 
     return (
         <main className="min-h-screen bg-[#F7FAFB]">

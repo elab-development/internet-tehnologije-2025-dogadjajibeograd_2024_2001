@@ -6,6 +6,9 @@ import {
 } from "@/shared/types";
 import { FormEvent, useEffect, useState } from "react";
 
+import { useAuth } from "./AuthProvider";
+import Link from "next/link";
+
 export default function AddEvent() {
     const [eventTypes, setEventTypes] = useState<FullEventTypeDto[]>([]);
     const [eventLocations, setEventLocations] =
@@ -26,6 +29,9 @@ export default function AddEvent() {
     tomorrow.setDate(tomorrow.getDate() + 1);
 
     const minDate = tomorrow.toISOString().split("T")[0];
+
+    const { status } = useAuth();
+    const isAdmin = status === "admin";
 
     useEffect(() => {
         const fetchData = async () => {
@@ -148,8 +154,34 @@ export default function AddEvent() {
         focus:ring-[#E0F2FE]
     `;
 
-    const labelClass =
-        "mb-2.5 block text-sm font-semibold text-[#52677D]";
+    const labelClass = "mb-2.5 block text-sm font-semibold text-[#52677D]";
+
+    if (!isAdmin) {
+        return (
+            <main className="min-h-[calc(100vh-80px)] bg-[#EDFAF9] px-4 py-14 sm:px-6 lg:px-8">
+                <div className="mx-auto max-w-2xl">
+                    <div className="rounded-3xl border border-[#006D77]/10 bg-white p-8 text-center shadow-[0_16px_45px_rgba(0,109,119,0.08)]">
+                        <h1 className="text-2xl font-bold text-[#163536]">
+                            Pristup nije dozvoljen
+                        </h1>
+
+                        <p className="mt-3 text-sm leading-6 text-[#607D7E]">
+                            Samo administrator ima pravo da dodaje nove događaje.
+                        </p>
+
+                        {status === "unauthenticated" && (
+                            <Link
+                                href="/login"
+                                className="mt-6 inline-flex items-center justify-center rounded-xl bg-[#006D77] px-6 py-3 text-sm font-semibold text-white transition hover:bg-[#005A63]"
+                            >
+                                Prijavi se
+                            </Link>
+                        )}
+                    </div>
+                </div>
+            </main>
+        );
+    }
 
     return (
         <main className="min-h-[calc(100vh-80px)] bg-[#F8FCFE]">
